@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penguji API Duitku</title>
+    <!-- Muat Tailwind CSS terus dari CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 p-4 md:p-8 font-sans min-h-screen">
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="p-3 bg-blue-600 text-white rounded-lg shadow-lg">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">Penguji API Duitku</h1>
+                <p class="text-slate-500">Alat ujian Sandbox & Production (Satu Fail HTML)</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Kiri: Borang -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Tetapan Sistem -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">Konfigurasi Pelayan</h2>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Persekitaran</label>
+                            <select id="env" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="sandbox">Sandbox (Ujian)</option>
+                                <option value="production">Production (Sebenar)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Versi API</label>
+                            <select id="version" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="v2">V2 (Inquiry)</option>
+                                <option value="v1">V1 (Legacy)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Kod Merchant</label>
+                            <input type="text" id="merchantCode" placeholder="Cth: DXXXXX" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Kunci API</label>
+                            <input type="password" id="apiKey" placeholder="Masukkan Kunci API" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Butiran Transaksi -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">Butiran Transaksi</h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-600 mb-1">ID Pesanan</label>
+                                <div class="flex">
+                                    <input type="text" id="orderId" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                                    <button onclick="generateRandomOrderId()" class="bg-slate-200 p-2.5 rounded-r-lg hover:bg-slate-300 border border-l-0 border-slate-300 text-slate-600" title="Jana Semula ID">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-600 mb-1">Jumlah (IDR)</label>
+                                <input type="number" id="amount" value="10000" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Kaedah Pembayaran</label>
+                            <select id="paymentMethod" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="VC">Kad Kredit (VC)</option>
+                                <option value="BC">BCA Virtual Account (BC)</option>
+                                <option value="M2">Mandiri Virtual Account (M2)</option>
+                                <option value="NQ">QRIS (NQ)</option>
+                            </select>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Nama Pelanggan</label>
+                            <input type="text" id="customerName" value="Ahmad Albab" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-3 outline-none"/>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-600 mb-1">Emel</label>
+                                    <input type="email" id="customerEmail" value="ahmad@example.com" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-600 mb-1">No. Telefon</label>
+                                    <input type="text" id="customerPhone" value="0123456789" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanan: Output & Kod -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- JSON Payload -->
+                <div class="bg-slate-900 rounded-2xl shadow-lg overflow-hidden flex flex-col max-h-[400px]">
+                    <div class="px-4 py-3 bg-slate-800 flex justify-between items-center border-b border-slate-700">
+                        <span class="text-sm font-medium text-slate-300 font-mono">Payload JSON</span>
+                        <button onclick="copyText('payloadOutput')" class="text-slate-400 hover:text-white transition flex items-center text-xs">Salin</button>
+                    </div>
+                    <div class="p-4 overflow-auto flex-grow">
+                        <pre id="payloadOutput" class="text-emerald-400 text-sm font-mono whitespace-pre-wrap">Sila masukkan Kod Merchant & Kunci API...</pre>
+                    </div>
+                    <div class="px-4 py-2 bg-slate-950 border-t border-slate-800 text-xs text-slate-400">
+                        <span class="font-bold text-slate-300">Signature:</span> <span id="signatureOutput">-</span>
+                    </div>
+                </div>
+
+                <!-- cURL Command -->
+                <div class="bg-slate-900 rounded-2xl shadow-lg overflow-hidden">
+                    <div class="px-4 py-3 bg-slate-800 flex justify-between items-center border-b border-slate-700">
+                        <span class="text-sm font-medium text-slate-300 font-mono">Arahan cURL</span>
+                        <button onclick="copyText('curlOutput')" class="text-slate-400 hover:text-white transition flex items-center text-xs">Salin</button>
+                    </div>
+                    <div class="p-4 overflow-auto bg-slate-950 max-h-32">
+                        <pre id="curlOutput" class="text-blue-300 text-xs font-mono whitespace-pre-wrap">Sila isi borang...</pre>
+                    </div>
+                </div>
+
+                <!-- Action Button & Response -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="mb-4 bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm text-amber-800">
+                        <strong>Makluman CORS:</strong> Pelayar web mungkin menyekat permintaan secara terus. Digalakkan salin kod cURL di atas dan jalankan di Terminal/Postman.
+                    </div>
+                    <button id="testBtn" onclick="sendRequest()" class="w-full mb-4 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50">
+                        Uji Panggilan API
+                    </button>
+                    <div class="bg-slate-100 rounded-lg border border-slate-200 overflow-hidden">
+                        <div class="px-3 py-2 bg-slate-200 text-xs font-semibold text-slate-600">Respons Pelayan</div>
+                        <div class="p-4 overflow-auto max-h-48 text-sm font-mono text-slate-800 bg-slate-50">
+                            <pre id="responseOutput" class="whitespace-pre-wrap text-slate-400 italic">Tiada respons setakat ini...</pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logik Aplikasi -->
+    <script>
+        // DOM Elements
+        const inputs = ['env', 'version', 'merchantCode', 'apiKey', 'orderId', 'amount', 'paymentMethod', 'customerName', 'customerEmail', 'customerPhone'];
+        let currentPayloadStr = "";
+        let currentEndpoint = "";
+
+        // Event Listeners
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateData);
+            document.getElementById(id).addEventListener('change', updateData);
+        });
+
+        // Initialize Order ID on load
+        window.onload = () => {
+            generateRandomOrderId();
+        };
+
+        function generateRandomOrderId() {
+            document.getElementById('orderId').value = 'ORD-' + Math.floor(Math.random() * 1000000000);
+            updateData();
+        }
+
+        // Generate SHA256 Hash
+        async function generateSHA256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function updateData() {
+            const vals = {};
+            inputs.forEach(id => vals[id] = document.getElementById(id).value);
+
+            if (!vals.merchantCode || !vals.apiKey || !vals.amount || !vals.orderId) {
+                document.getElementById('testBtn').disabled = true;
+                return;
+            }
+            document.getElementById('testBtn').disabled = false;
+
+            // Generate Signature
+            const sigString = vals.merchantCode + vals.orderId + vals.amount + vals.apiKey;
+            const signature = await generateSHA256(sigString);
+            document.getElementById('signatureOutput').innerText = signature;
+
+            // Determine Endpoint
+            const baseUrl = vals.env === 'sandbox' ? 'https://sandbox.duitku.com' : 'https://passport.duitku.com';
+            currentEndpoint = vals.version === 'v2' ? `${baseUrl}/webapi/api/merchant/v2/inquiry` : `${baseUrl}/webapi/api/merchant/inquiry`;
+
+            // Build Payload (V2 format mostly compatible)
+            const payloadObj = {
+                merchantCode: vals.merchantCode,
+                paymentAmount: parseInt(vals.amount),
+                paymentMethod: vals.paymentMethod,
+                merchantOrderId: vals.orderId,
+                productDetails: "Ujian Integrasi Duitku",
+                additionalParam: "",
+                merchantUserInfo: "",
+                customerVaName: vals.customerName,
+                email: vals.customerEmail,
+                phoneNumber: vals.customerPhone,
+                itemDetails: [{ name: "Ujian Integrasi", price: parseInt(vals.amount), quantity: 1 }],
+                customerDetail: {
+                    firstName: vals.customerName.split(' ')[0] || '',
+                    lastName: vals.customerName.split(' ').slice(1).join(' ') || '',
+                    email: vals.customerEmail,
+                    phoneNumber: vals.customerPhone
+                },
+                callbackUrl: "https://example.com/api/callback",
+                returnUrl: "https://example.com/api/return",
+                signature: signature,
+                expiryPeriod: 60
+            };
+
+            currentPayloadStr = JSON.stringify(payloadObj, null, 2);
+            document.getElementById('payloadOutput').innerText = currentPayloadStr;
+            document.getElementById('payloadOutput').classList.remove('text-slate-400');
+
+            // Build cURL
+            const curl = `curl -X POST ${currentEndpoint} \\\n-H "Content-Type: application/json" \\\n-H "Accept: application/json" \\\n-d '${currentPayloadStr}'`;
+            document.getElementById('curlOutput').innerText = curl;
+        }
+
+        async function sendRequest() {
+            const btn = document.getElementById('testBtn');
+            const resOut = document.getElementById('responseOutput');
+            
+            btn.innerText = "Sedang menghantar...";
+            btn.disabled = true;
+            resOut.innerText = "Sila tunggu...";
+            resOut.classList.remove('text-slate-400', 'italic');
+
+            try {
+                const response = await fetch(currentEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: currentPayloadStr
+                });
+                const data = await response.json();
+                resOut.innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resOut.innerText = `RALAT CORS ATAU RANGKAIAN:\n\n${error.message}\n\nNota: API Duitku tidak membenarkan panggilan terus dari pelayar demi keselamatan. Sila salin arahan cURL dan jalankan di terminal/CMD.`;
+            } finally {
+                btn.innerText = "Uji Panggilan API";
+                btn.disabled = false;
+            }
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).catch(err => {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                textArea.remove();
+            });
+            alert("Disalin ke papan keratan (clipboard)!");
+        }
+    </script>
+</body>
+  </html>
+  
